@@ -1,0 +1,40 @@
+{
+	"name": "ts-template",
+	"version": "0.0.1-alpha.3",
+	"main": "index.js",
+	"repository": "git@github.com:ShaunLWM/ts-template.git",
+	"author": "ShaunLWM",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/jest": "^26.0.23",
+		"@typescript-eslint/eslint-plugin": "^4.26.0",
+		"@typescript-eslint/parser": "^4.26.0",
+		"eslint": "7.2.0",
+		"eslint-config-prettier": "8.3.0",
+		"eslint-plugin-import": "2.22.1",
+		"eslint-plugin-prettier": "3.4.0",
+		"husky": "^6.0.0",
+		"jest": "^27.0.4",
+		"lint-staged": "^11.0.0",
+		"prettier": "^2.3.0",
+		"ts-jest": "^27.0.3",
+		"typescript": "^4.3.2"
+	},
+	"scripts": {
+		"start": "yarn watch",
+		"build": "tsc",
+		"watch": "tsc --watch",
+		"prettier": "prettier 'src/**/*.ts'",
+		"prettier:fix": "prettier --write 'src/**/*.ts'",
+		"eslint": "eslint 'src/**/*.ts'",
+		"eslint:fix": "eslint --fix 'src/**/*.ts'",
+		"prepare": "husky install",
+		"test": "jest"
+	},
+	"lint-staged": {
+		"*.{ts,js}": [
+			"eslint --max-warnings=0",
+			"prettier --write"
+		]
+	}
+}
