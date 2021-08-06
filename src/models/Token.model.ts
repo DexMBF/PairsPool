@@ -1,13 +1,35 @@
-import Papr, { types, schema } from "papr";
+import { Document, Model, model, Schema } from "mongoose";
 
-const TokenSchema = schema({
-	address: types.string({ required: true }),
-	name: types.string({ required: true }),
-	symbol: types.string({ required: true }),
+export interface IToken {
+	address: string;
+	name: string;
+	symbol: string;
+}
+
+const TokenSchemaFields: Record<keyof IToken, any> = {
+	address: {
+		type: String,
+		unique: true,
+		required: true,
+	},
+	name: {
+		type: String,
+		required: true,
+	},
+	symbol: {
+		type: String,
+		required: true,
+	},
+};
+
+const TokenSchema = new Schema<ITokenDocument, ITokenModel>(TokenSchemaFields, {
+	timestamps: false,
 });
 
-export type TokenDocument = typeof TokenSchema[0];
+export interface ITokenDocument extends IToken, Document {}
 
-const Token = new Papr().model("tokens", TokenSchema);
+export interface ITokenModel extends Model<ITokenDocument> {
+	something: boolean;
+}
 
-export default Token;
+export default model<ITokenDocument, ITokenModel>("Token", TokenSchema);
