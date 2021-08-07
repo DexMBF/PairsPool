@@ -41,6 +41,7 @@
 		"bullmq": "^1.40.1",
 		"dotenv-safe": "^8.2.0",
 		"ethers": "^5.4.4",
-		"mongoose": "^5.13.5"
+		"mongoose": "^5.13.5",
+		"socket.io": "^4.1.3"
 	}
 }
