@@ -8,8 +8,15 @@ const io = new Server(server, {
 	},
 });
 
+io.on("connection", (socket) => {
+	console.log(`[socket] client connected`);
+	socket.on("disconnect", () => {
+		console.log("Client disconnected");
+	});
+});
+
 server.listen(process.env.SOCKETIO_PORT, () => {
-	console.log(`Server listening on port ${process.env.SOCKETIO_PORT}`);
+	console.log(`[server] listening on port ${process.env.SOCKETIO_PORT}`);
 });
 
 export { io };
