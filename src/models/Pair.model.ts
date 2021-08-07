@@ -12,6 +12,7 @@ const PairSchemaFields: Record<keyof IPair, any> = {
 		type: String,
 		unique: true,
 		required: true,
+		index: true,
 	},
 	token0: {
 		type: Schema.Types.ObjectId,

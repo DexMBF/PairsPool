@@ -11,6 +11,7 @@ const TokenSchemaFields: Record<keyof IToken, any> = {
 		type: String,
 		unique: true,
 		required: true,
+		index: true,
 	},
 	name: {
 		type: String,
