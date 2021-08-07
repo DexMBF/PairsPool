@@ -4,6 +4,7 @@ export interface IPair {
 	address: string;
 	token0: string;
 	token1: string;
+	date: number;
 }
 
 const PairSchemaFields: Record<keyof IPair, any> = {
@@ -20,6 +21,10 @@ const PairSchemaFields: Record<keyof IPair, any> = {
 		type: Schema.Types.ObjectId,
 		ref: "Token",
 	},
+	date: {
+		type: Number,
+		required: true,
+	},
 };
 
 const PairSchema = new Schema<IPairDocument, IPairModel>(PairSchemaFields, {
@@ -29,7 +34,7 @@ const PairSchema = new Schema<IPairDocument, IPairModel>(PairSchemaFields, {
 export interface IPairDocument extends IPair, Document {}
 
 export interface IPairModel extends Model<IPairDocument> {
-	something: boolean;
+	something?: boolean;
 }
 
 export default model<IPairDocument, IPairModel>("Pair", PairSchema);
