@@ -15,6 +15,11 @@ function App() {
 			cloned.unshift(msg);
 			setPairs(cloned.slice(0, 25));
 		});
+
+		socket?.emit("init");
+		socket?.once("init", (pairs: PairEmitData[]) => {
+			setPairs(pairs);
+		});
 	}, [connected, pairs, socket]);
 
 	return (

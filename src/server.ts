@@ -33,6 +33,10 @@ io.on("connection", (socket) => {
 	socket.on("disconnect", () => {
 		console.log("Client disconnected");
 	});
+
+	socket.on("init", () => {
+		socket.emit("init", history);
+	});
 });
 
 server.listen(process.env.SOCKETIO_PORT, () => {
