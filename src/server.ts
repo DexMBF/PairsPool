@@ -2,8 +2,11 @@ import http from "http";
 import https from "https";
 import { Server } from "socket.io";
 import fs from "fs";
+import { PairWorker } from "./lib/QueueManager";
+import { Job } from "bullmq";
 
 let server;
+const history: PairEmitData[] = [];
 
 if (process.env.ENVIRONMENT && process.env.ENVIRONMENT === "prod") {
 	console.log("[server] prod environment");
@@ -34,6 +37,13 @@ io.on("connection", (socket) => {
 
 server.listen(process.env.SOCKETIO_PORT, () => {
 	console.log(`[server] listening on port ${process.env.SOCKETIO_PORT}`);
+});
+
+PairWorker.on("completed", (job: Job, value: PairEmitData) => {
+	const arr = [...history];
+	arr.push(value);
+	history.push(...arr);
+	io.emit("pair:new", value);
 });
 
 export { io };

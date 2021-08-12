@@ -3,7 +3,6 @@ import { ethers } from "ethers";
 import ERC21Abi from "../abi/ERC21.json";
 import Pair, { IPair } from "../models/Pair.model";
 import Token, { IToken } from "../models/Token.model";
-import { io } from "../server";
 import { Provider } from "./Helpers";
 
 const connection = {
@@ -54,18 +53,23 @@ const PairWorker = new Worker<PairOpts>(
 				pairDocument.token1 = dbTokenOne._id;
 			}
 
-			if (tokenHash === 0) return console.log("Nothing to search");
+			if (tokenHash === 0) {
+				return null;
+			}
 
 			const results = (await Promise.allSettled(searchTokens)).filter((p) => p.status === "fulfilled");
-			if (results.length !== searchTokens.length) return console.log("Something broke");
+			if (results.length !== searchTokens.length) {
+				return null;
+			}
 
 			if (
 				results[0].status === "rejected" ||
 				results[1].status === "rejected" ||
 				(results[2] && results[2].status === "rejected") ||
 				(results[3] && results[3].status === "rejected")
-			)
-				return;
+			) {
+				return null;
+			}
 
 			const tokenDocuments: IToken[] = [];
 			switch (tokenHash) {
@@ -94,7 +98,6 @@ const PairWorker = new Worker<PairOpts>(
 			}
 
 			const tokensInsertResult = await Token.insertMany(tokenDocuments);
-			console.log(tokensInsertResult);
 			switch (tokenHash) {
 				case 1:
 					pairDocument.token0 = tokensInsertResult[0]._id;
@@ -119,7 +122,7 @@ const PairWorker = new Worker<PairOpts>(
 					setDefaultsOnInsert: true,
 				}
 			).exec();
-			console.log(pairUpsertResult);
+
 			const result = await Pair.findOne({ _id: pairUpsertResult._id })
 				.populate("token0", "-_id -__v")
 				.populate("token1", "-_id -__v")
@@ -127,9 +130,10 @@ const PairWorker = new Worker<PairOpts>(
 				.lean()
 				.exec();
 			console.log(`---------------- DONE ----------------`);
-			io.emit("pair:new", result);
+			return result;
 		} catch (error) {
 			console.log(error);
+			return null;
 		}
 	},
 	{ connection }
