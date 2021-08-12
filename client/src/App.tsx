@@ -33,7 +33,7 @@ function App() {
 					{pairs.length > 0 &&
 						pairs.map((pair) => {
 							return (
-								<Tr>
+								<Tr key={pair.address}>
 									<Td>
 										<a href={`https://bscscan.com/address/${pair.address}`} target="_blank" rel="noreferrer">
 											{pair.address}
