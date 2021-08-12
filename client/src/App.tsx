@@ -2,6 +2,7 @@ import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 import clone from "lodash.clonedeep";
 import React, { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "./providers/WebSockerProvider";
+import { timeAgo } from "./utils/Helper";
 
 function App() {
 	const { socket, connected } = useContext(WebSocketContext);
@@ -19,12 +20,13 @@ function App() {
 	return (
 		<div className="App">
 			<Table variant="simple">
-				<TableCaption>Imperial to metric conversion factors</TableCaption>
+				<TableCaption>pancakeswap ❤</TableCaption>
 				<Thead>
 					<Tr>
-						<Th>To convert</Th>
-						<Th>into</Th>
-						<Th isNumeric>multiply by</Th>
+						<Th>address</Th>
+						<Th>token0</Th>
+						<Th>token1</Th>
+						<Th></Th>
 					</Tr>
 				</Thead>
 				<Tbody>
@@ -32,11 +34,14 @@ function App() {
 						pairs.map((pair) => {
 							return (
 								<Tr>
-									<Td>{pair.address}</Td>
 									<Td>
-										{pair.token0.name}/{pair.token1.name}
+										<a href={`https://bscscan.com/address/${pair.address}`} target="_blank" rel="noreferrer">
+											{pair.address}
+										</a>
 									</Td>
-									<Td>{pair.date}</Td>
+									<Td>{pair.token0.name}</Td>
+									<Td>{pair.token1.name}</Td>
+									<Td>{timeAgo(pair.date)}</Td>
 								</Tr>
 							);
 						})}
