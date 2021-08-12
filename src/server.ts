@@ -40,8 +40,9 @@ server.listen(process.env.SOCKETIO_PORT, () => {
 });
 
 PairWorker.on("completed", (job: Job, value: PairEmitData) => {
-	const arr = [...history];
-	arr.push(value);
+	const arr = [...history].slice(0, 24);
+	arr.unshift(value);
+	history.length = 0;
 	history.push(...arr);
 	io.emit("pair:new", value);
 });
