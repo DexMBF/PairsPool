@@ -12,7 +12,6 @@ const connection = {
 const PairQueue = new Queue("PairQueue", { connection });
 
 const addPair = async (opts: PairOpts): Promise<void> => {
-	console.log(`[addPair] ${JSON.stringify(opts)}`);
 	await PairQueue.add("NewPair", opts);
 };
 
@@ -20,7 +19,7 @@ const PairWorker = new Worker<PairOpts>(
 	"PairQueue",
 	async (job) => {
 		try {
-			console.log(`[PairWorker] Processing queue ${JSON.stringify(job.data)}`);
+			// console.log(`[PairWorker] Processing queue ${JSON.stringify(job.data)}`);
 			const { token0, token1, pairAddress, date } = job.data;
 			const tokenZeroCOntract = new ethers.Contract(token0, ERC21Abi, Provider);
 			const tokenOneContract = new ethers.Contract(token1, ERC21Abi, Provider);
@@ -129,10 +128,9 @@ const PairWorker = new Worker<PairOpts>(
 				.select("-__v")
 				.lean()
 				.exec();
-			console.log(`---------------- DONE ----------------`);
 			return result;
 		} catch (error) {
-			console.log(error);
+			console.error(error);
 			return null;
 		}
 	},
