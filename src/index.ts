@@ -5,6 +5,7 @@ import { addPair } from "./lib/QueueManager";
 import "./server";
 
 (async () => {
+	console.log("[db] connecting..");
 	await mongoose.connect(process.env.MONGODB_DATABASE as string, {
 		useNewUrlParser: true,
 		useUnifiedTopology: true,

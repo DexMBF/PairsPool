@@ -3,7 +3,7 @@ import { Server } from "socket.io";
 const server = http.createServer();
 const io = new Server(server, {
 	cors: {
-		origin: "*",
+		origin: process.env.CORS_WHITELIST?.split(",") ?? "*",
 		methods: ["GET", "POST"],
 	},
 });
