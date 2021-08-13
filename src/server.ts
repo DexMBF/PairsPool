@@ -1,9 +1,10 @@
+import { Job } from "bullmq";
+import fs from "fs";
 import http from "http";
 import https from "https";
 import { Server } from "socket.io";
-import fs from "fs";
 import { PairWorker } from "./lib/QueueManager";
-import { Job } from "bullmq";
+import Pair from "./models/Pair.model";
 
 let server;
 const history: PairEmitData[] = [];
@@ -39,8 +40,18 @@ io.on("connection", (socket) => {
 	});
 });
 
-server.listen(process.env.SOCKETIO_PORT, () => {
+server.listen(process.env.SOCKETIO_PORT, async () => {
 	console.log(`[server] listening on port ${process.env.SOCKETIO_PORT}`);
+	const results = await Pair.find()
+		.populate("token0", "-_id -__v")
+		.populate("token1", "-_id -__v")
+		.select("-__v")
+		.sort({ _id: -1 })
+		.lean()
+		.exec();
+	if (results.length > 0) {
+		history.push(...(results as unknown as PairEmitData[]));
+	}
 });
 
 PairWorker.on("completed", (job: Job, value: PairEmitData) => {
