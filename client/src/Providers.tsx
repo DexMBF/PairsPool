@@ -8,7 +8,7 @@ interface Props {
 }
 
 const SOCKET_URL =
-	process.env.ENVIRONMENT === "prod" ? process.env.REACT_APP_SOCKET_URL : process.env.REACT_APP_SOCKET_URL_DEV;
+	process.env.REACT_APP_ENVIRONMENT === "prod" ? process.env.REACT_APP_SOCKET_URL : process.env.REACT_APP_SOCKET_URL_DEV;
 
 export default function Providers({ children }: Props) {
 	return (
