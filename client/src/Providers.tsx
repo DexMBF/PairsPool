@@ -7,10 +7,13 @@ interface Props {
 	children: React.ReactChild;
 }
 
+const SOCKET_URL =
+	process.env.ENVIRONMENT === "prod" ? process.env.REACT_APP_SOCKET_URL : process.env.REACT_APP_SOCKET_URL_DEV;
+
 export default function Providers({ children }: Props) {
 	return (
 		<ChakraProvider theme={theme}>
-			<WebSocketContextProvider url="http://localhost:3009">{children}</WebSocketContextProvider>
+			<WebSocketContextProvider url={SOCKET_URL}>{children}</WebSocketContextProvider>
 		</ChakraProvider>
 	);
 }
