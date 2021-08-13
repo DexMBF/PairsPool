@@ -47,6 +47,7 @@ server.listen(process.env.SOCKETIO_PORT, async () => {
 		.populate("token1", "-_id -__v")
 		.select("-__v")
 		.sort({ _id: -1 })
+		.limit(25)
 		.lean()
 		.exec();
 	if (results.length > 0) {
