@@ -5,11 +5,16 @@ import Pair, { IPair } from "../models/Pair.model";
 import Token, { IToken } from "../models/Token.model";
 import { Provider } from "./Helpers";
 
-const connection = {
-	password: process.env.REDIS_PASSWORD as string,
-};
+const connection =
+	process.env.ENVIRONMENT && process.env.ENVIRONMENT === "prod"
+		? {
+				connection: {
+					password: process.env.REDIS_PASSWORD as string,
+				},
+		  }
+		: undefined;
 
-const PairQueue = new Queue("PairQueue", { connection });
+const PairQueue = new Queue("PairQueue", connection);
 
 const addPair = async (opts: PairOpts): Promise<void> => {
 	await PairQueue.add("NewPair", opts);
@@ -134,7 +139,7 @@ const PairWorker = new Worker<PairOpts>(
 			return null;
 		}
 	},
-	{ connection }
+	connection
 );
 
 PairWorker.on("error", (err) => {
