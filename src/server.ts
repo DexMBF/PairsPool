@@ -44,6 +44,7 @@ server.listen(process.env.SOCKETIO_PORT, () => {
 });
 
 PairWorker.on("completed", (job: Job, value: PairEmitData) => {
+	if (!value) return;
 	const arr = [...history].slice(0, 24);
 	arr.unshift(value);
 	history.length = 0;
