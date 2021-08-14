@@ -9,18 +9,22 @@ function App() {
 	const [pairs, setPairs] = useState<PairEmitData[]>([]);
 
 	useEffect(() => {
-		if (!connected) return;
-		socket?.on("pair:new", (msg: PairEmitData) => {
-			const cloned = clone(pairs);
-			cloned.unshift(msg);
-			setPairs(cloned.slice(0, 25));
-		});
+		function setOnNewPairsListener() {
+			socket?.on("pair:new", (msg: PairEmitData) => {
+				const cloned = clone(pairs);
+				cloned.unshift(msg);
+				setPairs(cloned.slice(0, 25));
+			});
+		}
 
+		if (!connected) return;
 		socket?.emit("init");
-		socket?.once("init", (pairs: PairEmitData[]) => {
-			setPairs(pairs);
+		socket?.once("init", (initPairs: PairEmitData[]) => {
+			setPairs(initPairs);
+			setOnNewPairsListener();
 		});
-	}, [connected, pairs, socket]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [connected, socket]);
 
 	return (
 		<div className="App">
