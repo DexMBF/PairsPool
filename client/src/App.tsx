@@ -48,8 +48,16 @@ function App() {
 											{pair.address}
 										</a>
 									</Td>
-									<Td>{pair.token0.name}</Td>
-									<Td>{pair.token1.name}</Td>
+									<Td>
+										<a href={`https://bscscan.com/address/${pair.token0.address}`} target="_blank" rel="noreferrer">
+											{pair.token0.name}
+										</a>
+									</Td>
+									<Td>
+										<a href={`https://bscscan.com/address/${pair.token1.address}`} target="_blank" rel="noreferrer">
+											{pair.token1.name}
+										</a>
+									</Td>
 									<Td>{timeAgo(pair.date)}</Td>
 								</Tr>
 							);
