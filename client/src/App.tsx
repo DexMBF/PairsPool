@@ -1,30 +1,38 @@
 import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import clone from "lodash.clonedeep";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "./providers/WebSockerProvider";
 import { timeAgo } from "./utils/Helper";
 
 function App() {
 	const { socket, connected } = useContext(WebSocketContext);
 	const [pairs, setPairs] = useState<PairEmitData[]>([]);
+	const [hasInit, setInit] = useState(false);
+
+	const addPair = useCallback((pair: PairEmitData) => {
+		const cloned = clone(pairs);
+		cloned.unshift(pair);
+		setPairs(cloned.slice(0, 25));
+	}, [pairs]);
 
 	useEffect(() => {
-		function setOnNewPairsListener() {
-			socket?.on("pair:new", (msg: PairEmitData) => {
-				const cloned = clone(pairs);
-				cloned.unshift(msg);
-				setPairs(cloned.slice(0, 25));
-			});
-		}
-
 		if (!connected) return;
 		socket?.emit("init");
 		socket?.once("init", (initPairs: PairEmitData[]) => {
+			console.log(`------ SET PAIRS ${initPairs}`);
 			setPairs(initPairs);
-			setOnNewPairsListener();
+			setInit(true);
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [connected, socket]);
+	}, [connected]);
+
+	useEffect(() => {
+		if (!hasInit || !connected) return;
+		socket?.on("pair:new", (pair: PairEmitData) => {
+			addPair(pair);
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [addPair, connected, hasInit]);
 
 	return (
 		<div className="App">
