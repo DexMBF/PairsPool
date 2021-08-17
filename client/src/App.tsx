@@ -39,8 +39,8 @@ function App() {
 	}, [addPair, connected, hasInit]);
 
 	useInterval(() => {
-		forceUpdate();
-	}, pairs.length > 0 ? 5000: null);
+		if (pairs.length > 0) forceUpdate();
+	}, 5000);
 
 	return (
 		<div className="App">
