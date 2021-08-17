@@ -40,7 +40,7 @@ function App() {
 
 	useInterval(() => {
 		forceUpdate();
-	}, 5000);
+	}, pairs.length > 0 ? 5000: null);
 
 	return (
 		<div className="App">
