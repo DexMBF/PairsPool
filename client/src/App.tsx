@@ -1,6 +1,7 @@
-import { Table, TableCaption, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Table, TableCaption, Tbody, Td, Th, Thead, Tr, useInterval } from "@chakra-ui/react";
 import clone from "lodash.clonedeep";
 import React, { useCallback, useContext, useEffect, useState } from "react";
+import useUpdate from "./hooks/useUpdate";
 import { WebSocketContext } from "./providers/WebSockerProvider";
 import { timeAgo } from "./utils/Helper";
 
@@ -8,18 +9,21 @@ function App() {
 	const { socket, connected } = useContext(WebSocketContext);
 	const [pairs, setPairs] = useState<PairEmitData[]>([]);
 	const [hasInit, setInit] = useState(false);
+	const forceUpdate = useUpdate();
 
-	const addPair = useCallback((pair: PairEmitData) => {
-		const cloned = clone(pairs);
-		cloned.unshift(pair);
-		setPairs(cloned.slice(0, 25));
-	}, [pairs]);
+	const addPair = useCallback(
+		(pair: PairEmitData) => {
+			const cloned = clone(pairs);
+			cloned.unshift(pair);
+			setPairs(cloned.slice(0, 25));
+		},
+		[pairs]
+	);
 
 	useEffect(() => {
 		if (!connected) return;
 		socket?.emit("init");
 		socket?.once("init", (initPairs: PairEmitData[]) => {
-			console.log(`------ SET PAIRS ${initPairs}`);
 			setPairs(initPairs);
 			setInit(true);
 		});
@@ -33,6 +37,10 @@ function App() {
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [addPair, connected, hasInit]);
+
+	useInterval(() => {
+		forceUpdate();
+	}, 5000);
 
 	return (
 		<div className="App">
