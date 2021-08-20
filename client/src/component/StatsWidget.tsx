@@ -29,22 +29,22 @@ export default function StatsWidget() {
 		<Container maxW="container.lg" mt="6">
 			<Flex flexWrap="wrap">
 				<Box h="90" bg="red.500" flex={1} borderRadius={6}>
-					<Flex justifyContent="space-evenly" alignItems="center">
-						<Text fontSize="6xl">{stats?.pairs}</Text>
+					<Flex justifyContent="center" alignItems="center" flexDirection="column">
+						<Text fontSize="4xl">{stats?.pairs}</Text>
 						<Text fontSize="lg">pairs</Text>
 					</Flex>
 				</Box>
 				<Spacer />
 				<Box h="90" bg="red.400" flex={1} borderRadius={6}>
-					<Flex justifyContent="space-evenly" alignItems="center">
-						<Text fontSize="6xl">{stats?.tokens}</Text>
+					<Flex justifyContent="center" alignItems="center" flexDirection="column">
+						<Text fontSize="4xl">{stats?.tokens}</Text>
 						<Text fontSize="lg">tokens</Text>
 					</Flex>
 				</Box>
 				<Spacer />
 				<Box h="90" bg="red.300" flex={1} borderRadius={6}>
-					<Flex justifyContent="space-evenly" alignItems="center">
-						<Text fontSize="6xl">{stats?.users}</Text>
+					<Flex justifyContent="center" alignItems="center" flexDirection="column">
+						<Text fontSize="4xl">{stats?.users}</Text>
 						<Text fontSize="lg">users</Text>
 					</Flex>
 				</Box>
