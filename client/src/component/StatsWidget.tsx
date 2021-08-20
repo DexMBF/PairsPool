@@ -26,7 +26,7 @@ export default function StatsWidget() {
 	}, 5000);
 
 	return (
-		<Container maxW="container.lg" mt="6">
+		<Container maxW="container.lg" mt="6" mb="8">
 			<Flex flexWrap="wrap">
 				<Box h="90" bg="red.500" flex={1} borderRadius={6}>
 					<Flex justifyContent="center" alignItems="center" flexDirection="column">
