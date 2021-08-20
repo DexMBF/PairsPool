@@ -16,6 +16,7 @@ export default function StatsWidget() {
 
 	useEffect(() => {
 		if (!connected) return;
+		socket?.emit("stats");
 		socket?.on("stats", handleStats);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [connected]);
