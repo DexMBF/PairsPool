@@ -36,7 +36,7 @@ function App() {
 			addPair(pair);
 		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [addPair, connected, hasInit]);
+	}, [connected, hasInit]);
 
 	useInterval(() => {
 		if (pairs.length > 0) forceUpdate();
