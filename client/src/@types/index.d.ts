@@ -15,3 +15,10 @@ interface PairEmitData extends Omit<IPair, "token0" | "token1"> {
 	token0: IToken;
 	token1: IToken;
 }
+
+interface Stats {
+	pairs: number;
+	tokens: number;
+	users: number;
+	lastUpdated: number;
+}

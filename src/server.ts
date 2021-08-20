@@ -5,9 +5,42 @@ import https from "https";
 import { Server } from "socket.io";
 import { PairWorker } from "./lib/QueueManager";
 import Pair from "./models/Pair.model";
+import Token from "./models/Token.model";
 
 let server;
 const history: PairEmitData[] = [];
+const stats = {
+	pairs: 0,
+	tokens: 0,
+	users: 0,
+	lastUpdated: 0,
+};
+
+const io = new Server(server, {
+	cors: {
+		origin: process.env.CORS_WHITELIST?.split(",") ?? "*",
+		methods: ["GET", "POST"],
+	},
+});
+
+async function getStats() {
+	if (+Date.now() < stats.lastUpdated + 5000) return;
+	try {
+		const results = await Promise.allSettled([Pair.getUniquePairs(), Token.getUniqueTokens()]);
+		if (results[0].status === "fulfilled") {
+			stats.pairs = results[0].value;
+		}
+
+		if (results[1].status === "fulfilled") {
+			stats.tokens = results[1].value;
+		}
+
+		stats.users = (await io.fetchSockets()).length;
+		stats.lastUpdated = +Date.now();
+	} catch (error) {
+		console.error(error);
+	}
+}
 
 if (process.env.ENVIRONMENT && process.env.ENVIRONMENT === "prod") {
 	console.log("[server] prod environment");
@@ -22,13 +55,6 @@ if (process.env.ENVIRONMENT && process.env.ENVIRONMENT === "prod") {
 	server = http.createServer();
 }
 
-const io = new Server(server, {
-	cors: {
-		origin: process.env.CORS_WHITELIST?.split(",") ?? "*",
-		methods: ["GET", "POST"],
-	},
-});
-
 io.on("connection", (socket) => {
 	console.log(`[socket] client connected`);
 	socket.on("disconnect", () => {
@@ -37,6 +63,11 @@ io.on("connection", (socket) => {
 
 	socket.on("init", () => {
 		socket.emit("init", history);
+	});
+
+	socket.on("stats", async () => {
+		await getStats();
+		socket.emit("stats", stats);
 	});
 });
 

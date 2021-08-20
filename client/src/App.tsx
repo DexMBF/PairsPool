@@ -1,6 +1,7 @@
 import { Table, TableCaption, Tbody, Td, Th, Thead, Tr, useInterval } from "@chakra-ui/react";
 import clone from "lodash.clonedeep";
 import React, { useCallback, useContext, useEffect, useState } from "react";
+import StatsWidget from "./component/StatsWidget";
 import useUpdate from "./hooks/useUpdate";
 import { WebSocketContext } from "./providers/WebSockerProvider";
 import { timeAgo } from "./utils/Helper";
@@ -44,6 +45,7 @@ function App() {
 
 	return (
 		<div className="App">
+			<StatsWidget />
 			<Table variant="simple">
 				<TableCaption>pancakeswap ❤</TableCaption>
 				<Thead>

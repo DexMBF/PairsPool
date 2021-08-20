@@ -32,10 +32,14 @@ const PairSchema = new Schema<IPairDocument, IPairModel>(PairSchemaFields, {
 	timestamps: false,
 });
 
+PairSchema.methods.getUniquePairs = async (): Promise<number> => {
+	return await model("Pair").distinct("address").count().exec();
+};
+
 export interface IPairDocument extends IPair, Document {}
 
 export interface IPairModel extends Model<IPairDocument> {
-	something?: boolean;
+	getUniquePairs(): Promise<number>;
 }
 
 export default model<IPairDocument, IPairModel>("Pair", PairSchema);
