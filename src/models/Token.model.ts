@@ -29,8 +29,8 @@ const TokenSchema = new Schema<ITokenDocument, ITokenModel>(TokenSchemaFields, {
 
 export interface ITokenDocument extends IToken, Document {}
 
-TokenSchema.methods.getUniqueTokens = async (): Promise<number> => {
-	return await model("Token").distinct("address").count().exec();
+TokenSchema.statics.getUniqueTokens = async function (): Promise<number> {
+	return await this.distinct("address").count().exec();
 };
 
 export interface ITokenModel extends Model<ITokenDocument> {
